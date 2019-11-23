@@ -86,6 +86,12 @@ Install packages
 yarn add next react react-dom
 ```
 
+And TypeScript
+
+```
+yarn add --dev typescript @types/react @types/node
+```
+
 Add scripts to `package.json`
 
 ```json
@@ -99,9 +105,9 @@ Add scripts to `package.json`
 
 ### Create first page
 
-Create file `./pages/index.js`
+Create file `./pages/index.tsx`
 
-```js
+```tsx
 export default () => {
   return <h1>Ahoy, I'm Nela!</h1>;
 };
@@ -118,7 +124,7 @@ See <http://127.0.0.1:3000>
 I can put there more text
 
 
-```js
+```tsx
 export default () => {
   return (
     <>
@@ -145,7 +151,7 @@ export default () => {
 
 If you want put something into `<head></head>` in HTML you can use next Head component.
 
-```js
+```tsx
 import Head from "next/head";
 
 export default () => {
@@ -162,9 +168,9 @@ export default () => {
 
 ### Add Another Page
 
-Create file `./pages/contact.js`:
+Create file `./pages/contact.tsx`:
 
-```js
+```tsx
 import Head from "next/head";
 
 export default () => {
@@ -190,7 +196,7 @@ We can add link between pages. If you use next Link component instead of a, link
 
 Add those links to both pahes
 
-```js
+```tsx
 import Head from "next/head";
 import Link from "next/link";
 
@@ -213,10 +219,10 @@ export default () => {
 
 You see, we have same links on both pages, we can create own componet and use it in pages.
 
-Create file `./components/Nav.js`
+Create file `./components/Nav.tsx`
 
 ```js
-// components/Nav.js
+// components/Nav.txs
 import Link from "next/link";
 
 export default () => {
@@ -235,7 +241,7 @@ export default () => {
 Now you can import your component and use it in pages.
 
 ```js
-// pages/index.js
+// pages/index.tsx
 import Head from "next/head";
 import Nav from "../components/Nav";
 
@@ -293,8 +299,8 @@ yarn add bootstrap react-bootstrap
 
 Now, we can import bootstrap css and use some react rootstrap compponents.
 
-```js
-// pages/index.js
+```tsx
+// pages/index.tsx
 import Head from "next/head";
 import Nav from "../components/Nav";
 
@@ -328,12 +334,12 @@ export default () => {
 
 You also have to add this bootstrap to second page.
 
-### _app.js
+### _app.tsx
 
-If you dont want to repeat this bootstrap setting, navigation, ... layout it self, you can move those into `./pages/_app.js` and create layout for all your pages.
+If you dont want to repeat this bootstrap setting, navigation, ... layout it self, you can move those into `./pages/_app.tsx` and create layout for all your pages.
 
 ```js
-// pages/_app.js
+// pages/_app.tsx
 import App from "next/app";
 
 import Nav from "../components/Nav";
@@ -360,8 +366,8 @@ You can add styles to components using prop `styles={{margin: '10px'}}` for exam
 
 Put some styles to our layout.
 
-```js
-// pages/_app.js
+```tsx
+// pages/_app.tsx
 
 import App from "next/app";
 
@@ -402,7 +408,7 @@ yarn add next-images
 
 And setting in next config. Add to bootom of `next.config.js`.
 
-```js
+```tsx
 ...
 
 const withImages = require("next-images");
@@ -413,31 +419,33 @@ Now you can import your images into JS.
 
 We can create own Image component based on Bootstrap Image.
 
-We can create `./components/Image.js` with:
+We can create `./components/Image.tsx` with:
 
 ```js
-// components/Image.js
+// components/Image.tsx
 
-import React from "react";
+import React, { FunctionComponent } from "react";
 import Image from "react-bootstrap/Image";
 
-export default class MyImage extends React.Component {
-  render() {
-    return (
-      <Image
+type HelloProps = {
+  src: any;
+};
+
+const MyImage: FunctionComponent<HelloProps> = ({ src }) => (
+  <Image
         fluid={true}
-        src={this.props.src}
+        src={src}
         style={{ marginBottom: "30px" }}
       />
-    );
-  }
-}
+);
+
+export default MyImage;
 ```
 
 Now we can use this Image component in pages.
 
-```js
-// pages/contact.js
+```tsx
+// pages/contact.tsx
 import Image from "../components/Image";
 import Head from "next/head";
 
@@ -461,8 +469,8 @@ export default () => {
 
 Now we can add image and Bootstrap grid into about me page:
 
-```js
-// pages/index.js
+```tsx
+// pages/index.tsx
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -504,27 +512,34 @@ export default () => {
 
 We can make navigation prettier, we can create own button component based on Bootstrap button and use it there.
 
-```js
-// components/Button.js
+```tsx
+// components/Button.tsx
 
 import Button from "react-bootstrap/Button";
 import Link from "next/link";
 
-export default props => {
-  return (
-    <Link href={props.href}>
-      <Button style={{ margin: "5px" }} variant="outline-primary">
-        {props.children}
-      </Button>
-    </Link>
-  );
+import React, { FunctionComponent } from "react";
+
+type ButtonProps = {
+  href: string
+  children: any
 };
+
+const MyButton: FunctionComponent<ButtonProps> = ({ href, children }) => (
+  <Link href={href}>
+  <Button style={{ margin: "5px" }} variant="outline-primary">
+    {children}
+  </Button>
+</Link>
+);
+
+export default MyButton;
 ```
 
 Now we can improve Nav
 
-```js
-// components/Nav.js
+```tsx
+// components/Nav.tsx
 
 import Button from "../components/Button";
 import Row from "react-bootstrap/Row";
@@ -550,33 +565,37 @@ export default () => {
 
 We can create a simple gallery. We create Gallery component.
 
-```js
-// components/Gallery.js
+```tsx
+// components/Gallery.tsx
 
+import React, { FunctionComponent } from "react";
+import Image from "../components/Image";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import Image from "../components/Image";
-
-export default (props) => {
-  return (
-    <Row>
-      {props.images.map(image => {
-        return (
-          <Col sm={4}>
-            <Image src={image} />
-          </Col>
-        );
-      })}
-    </Row>
-  );
+type GalleryProps = {
+  images: Array<any>;
 };
+
+const Gallery: FunctionComponent<GalleryProps> = ({ images }) => (
+  <Row>
+    {images.map(image => {
+      return (
+        <Col sm={4}>
+          <Image src={image} />
+        </Col>
+      );
+    })}
+  </Row>
+);
+
+export default Gallery;
 ```
 
-And use it in new page `pages/gallery.js`
+And use it in new page `pages/gallery.tsx`
 
 ```js
-// pages/gallery.js
+// pages/gallery.tsx
 
 import Head from "next/head";
 import Gallery from "../components/Gallery";
