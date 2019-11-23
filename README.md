@@ -1,7 +1,7 @@
-# React Workshop @ LinuxDays 2019
+# React Girls Tutorial Nela
 
     2019 Ondrej Sika <ondrej@ondrejsika.com>
-    https://github.com/ondrejsika/linuxdays2019-react
+    https://github.com/ondrejsika/reactgirls-tutorial-nela
 
 
 ## Workshop Requirements
